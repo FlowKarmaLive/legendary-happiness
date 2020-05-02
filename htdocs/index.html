@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>FlowKarma.Live</title>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+<style rel="alternate stylesheet" title="Hullo">
+h1 {
+    color: #ccc;
+    font-family: 'Cinzel Decorative', cursive;
+}
+</style>
+<style rel="alternate stylesheet" title="Yeah">
+h1 {
+    color: #ccc;
+    font-family: 'EB Garamond', cursive;
+}
+</style>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script id="runtime" type="text/javascript">
+
+var cram_color = d3.scaleLinear([0,11],["hsl(0, 50%, 90%)", "hsl(360, 50%, 90%)"])
+    .interpolate(d3.interpolateHslLong);
+
+const MINUTES = 2
+
+function tim () {
+    var i, body = d3.select('body'), h1 = d3.select('h1');
+    for (i = 0; i < 12; i++) {
+        var c = d3.hsl(cram_color(i))
+        body.transition()
+            .delay(MINUTES * 5000 * i)
+            .duration(MINUTES * 5000)
+            .style('background-color', c+"");
+        c.h += 180;
+        c.s += 0.4;
+        h1.transition()
+            .delay(MINUTES * 5000 * i)
+            .duration(MINUTES * 5000)
+            .style('color', c);
+    }
+}
+
+window.onload = function(e){ 
+    console.log("window.onload", e, Date.now() ); 
+    window.setInterval(tim, MINUTES * 60000);
+    tim()
+}
+
+</script>
+</head>
+<body>
+<center><h1>FlowKarma.Live</h1></center>
+</body>
+</html>
