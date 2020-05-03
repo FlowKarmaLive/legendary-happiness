@@ -24,8 +24,6 @@ var cram_color = d3.scaleLinear(
         [0,11],
         ["hsl(0, 50%, 90%)", "hsl(360, 50%, 90%)"]
     ).interpolate(d3.interpolateHslLong),
-    w = 978,
-    h = 755,
     k = 4,
     chance = 0.08,
     nodes = [],
@@ -34,6 +32,10 @@ var cram_color = d3.scaleLinear(
         [1, k],
         ["hsl(350, 50%, 50%)", "hsl(250, 100%, 50%)"]
     ).interpolate(d3.interpolateHslLong);
+
+var w = window.innerWidth;
+var h = window.innerHeight;
+
 
 const MINUTES = 2
 
@@ -146,23 +148,6 @@ drag = simulation => {
 //   invalidation.then(() => simulation.stop());
 
 
-// function restart() {
-
-//   svg.selectAll("line.link")
-//       .data(links)
-//     .enter().insert("svg:line", "circle.node")
-//       .attr("class", "link")
-//       .attr("x1", function(d) { return d.source.x; })
-//       .attr("y1", function(d) { return d.source.y; })
-//       .attr("x2", function(d) { return d.target.x; })
-//       .attr("y2", function(d) { return d.target.y; });
-
-//   svg.selectAll("circle.node")
-//       .data(nodes)
-//     .enter().insert("svg:circle", "circle.cursor")
-//       .attr("class", "node")
-//       .attr("cx", function(d) { return d.x; })
-//       .attr("cy", function(d) { return d.y; })
 //       .attr("r", 5)
 //       .attr("fill", "yellow")
 //     //   .call(drag(simulation))
@@ -173,52 +158,9 @@ drag = simulation => {
 //         d.newbie = false;
 //       });
 
-//   simulation.restart();
-// }
 
 
-
-
-// function new_node_2() {
-//   var newnodes = [];
-//   for (var i = 0; i < nodes.length; i++) {
-//     var target = nodes[i];
-//     var ratio = target.contacts.length / k; //(target.contacts.length == 0)
-//     var n = 1 - ratio;
-//     if (target.contacts.length < k && ((n * Math.random()) <= chance)) {
-//       var node = new NodeClass(
-//         target.x + (Math.random() - 0.5) * 10,
-//         target.y + (Math.random() - 0.5) * 10
-//       );
-//       links.push({source: node, target: target});
-//       target.contacts.push(node);
-//       node.contacts.push(target);
-//       newnodes.push(node);
-//     }
-//   }
-//   _.each(newnodes, function(n){ nodes.push(n);});
-//   restart();
-//   return newnodes;
-// }
-
-
-// function runloop() {
-//     var newnodes;
-//     while (true) {
-//         newnodes = new_node_2();
-//         var count = newnodes.length;
-//         if (count > 0) {
-//             console.log(count);
-//             break;
-//         }
-//     };
-
-// }
-
-// svg.on("mousedown", runloop);
-// restart();
-
-var mindistance = 30
+var mindistance = 20
 
 inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mindistance
 
@@ -231,7 +173,6 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
   const svg = d3.select(".hull").append("svg:svg")
       .property("value", {nodes: [], links: []})
       .attr("viewBox", [-w / 2, -h / 2, w, h])
-      .attr("cursor", "crosshair")
       .on("mouseleave", mouseleft)
       .on("mousemove", mousemoved)
       .on("click", clicked);
@@ -251,18 +192,8 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
       .attr("stroke", "#999")
     .selectAll("line");
 
-  let mouselink = svg.append("g")
-      .attr("stroke", "red")
-    .selectAll("line");
-
   let node = svg.append("g")
     .selectAll("circle");
-
-  const cursor = svg.append("circle")
-      .attr("display", "none")
-      .attr("fill", "none")
-      .attr("stroke", "red")
-      .attr("r", mindistance - 5);
 
   function ticked() {
     node.attr("cx", d => d.x)
@@ -273,18 +204,6 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
 
-    mouselink = mouselink
-      .data(mouse ? nodes.filter(node => inrange(mouse, node)) : [])
-      .join("line")
-        .attr("x1", mouse && mouse.x)
-        .attr("y1", mouse && mouse.y)
-        .attr("x2", d => d.x)
-        .attr("y2", d => d.y);
-
-    cursor
-        .attr("display", mouse ? null : "none")
-        .attr("cx", mouse && mouse.x)
-        .attr("cy", mouse && mouse.y);
   }
 
   function mouseleft() {
@@ -338,8 +257,6 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
   }
 
   spawn({x: 0, y: 0});
-
-
 
 })
 
