@@ -42,7 +42,7 @@ var cram_color = d3.scaleLinear(
 var w = window.innerWidth;
 var h = window.innerHeight;
 
-const MINUTES = 2
+const MINUTES = 3
 
 function tim () {
     var i, body = d3.select('body'), h1 = d3.select('h1');
@@ -60,7 +60,6 @@ function tim () {
             .style('color', c);
     }
 }
-
 
 $(function() {
 
@@ -89,24 +88,6 @@ drag = sim => {
       .on("drag", dragged)
       .on("end", dragended);
 }
-
-//   node.append("title")
-//       .text(d => d.data.name);
-
-//       .attr("r", 5)
-//       .attr("fill", "yellow")
-//     .transition()
-//       .duration(150)
-//       .attr("fill", function(d) { return colors(d.contacts.length); })
-//       .each("end", function(d) {
-//         d.newbie = false;
-//       });
-
-var mindistance = 20
-
-inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mindistance
-
-//  -----------------------------------------------------------------
 
   let mouse = null;
 
@@ -215,6 +196,22 @@ function new_node() {
     }
   }
 }
+
+// Attempt at animated message passing.
+//
+// function fire_synapse(node, from) {
+//     var circle = foo(node)
+//     // animate our color
+//     circle.attr("fill", "yellow")
+//         .call(enter => enter.transition()
+//             .duration(1500)
+//             .attr("r", 5)
+//             .attr("fill", (d) => colors(d.contacts.length))
+//             .end()    // at the end
+//     // for each contact other than from
+//         // fire_synapse(contact, node)
+// }
+
 
 window.setInterval(new_node, 333);
 
