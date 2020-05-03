@@ -7,6 +7,12 @@
 h1 {
     color: #ccc;
     font-family: 'Cinzel Decorative', cursive;
+    left:0;
+    right:0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    width: 40%;
 }
 </style>
 <style rel="alternate stylesheet" title="Yeah">
@@ -24,9 +30,9 @@ var cram_color = d3.scaleLinear(
         [0,11],
         ["hsl(0, 50%, 90%)", "hsl(360, 50%, 90%)"]
     ).interpolate(d3.interpolateHslLong),
-    k = 6,
-    chance = 0.08,
-    nodes = [],
+    k = 4,
+    chance = 0.01,
+    nodes = [{x: 0, y: 0, contacts: []}],
     links = [],
     colors = d3.scaleLinear(
         [1, k],
@@ -102,8 +108,6 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
 
 //  -----------------------------------------------------------------
 
-  const nodes = [{x: 0, y: 0, contacts: []}];
-  const links = [];
   let mouse = null;
 
   const svg = d3.select(".hull").append("svg:svg")
@@ -173,7 +177,7 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
             .call(enter => enter.transition()
                 .duration(1500)
                 .attr("r", 5)
-                .attr("fill", "blue")
+                .attr("fill", function(d) { return colors(d.contacts.length); })
             )
             .call(dragger),
         update => update,
@@ -193,7 +197,7 @@ inrange = ({x: sx, y: sy}, {x: tx, y: ty}) => Math.hypot(sx - tx, sy - ty) <= mi
   }
 
 function new_node() {
-  if (nodes.length > 1999) return;
+  if (nodes.length > 1499) return;
   for (var i = 0; i < nodes.length; i++) {
     var target = nodes[i];
     var ratio = target.contacts.length / k;
@@ -206,16 +210,14 @@ function new_node() {
       };
       target.contacts.push(node);
       spawn(node, target)
-      break
+    //   break
     }
   }
 }
 
-window.setInterval(new_node, 118);
-
+window.setInterval(new_node, 333);
 
 })
-
 </script>
 </head>
 <body>
